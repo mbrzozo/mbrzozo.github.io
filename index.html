@@ -30,6 +30,8 @@
     }
   }
 });
+function record_timeout() {Genesys("command", "Journey.record", { eventName: "Timeout_triggered"});console.log("Journey record triggered")};
+Genesys("subscribe", "Journey.ready", function(){setTimeout(record_timeout, 3000);});
   </script>
 </head>
 <body style="background-color: black;">
