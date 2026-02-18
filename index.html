@@ -433,5 +433,19 @@
     document.getElementById("today").textContent =
       d.toLocaleDateString("de-DE", { year:"numeric", month:"2-digit", day:"2-digit" });
   </script>
+  <script type="text/javascript" charset="utf-8">
+  (function (g, e, n, es, ys) {
+    g['_genesysJs'] = e;
+    g[e] = g[e] || function () {
+      (g[e].q = g[e].q || []).push(arguments)
+    };
+    g[e].t = 1 * new Date();
+    g[e].c = es;
+    ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+  })(window, 'Genesys', 'https://apps.mypurecloud.de/genesys-bootstrap/genesys.min.js', {
+    environment: 'prod-euc1',
+    deploymentId: 'c3385458-f80b-47cd-8baa-07ee2a14d91c'
+  });
+</script>
 </body>
 </html>
