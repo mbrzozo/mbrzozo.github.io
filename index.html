@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FAQ Detail – Gemeinschaftsdepot</title>
+  <meta name="description" content="FAQ-Detailseite mit Kategorienavigation, Breadcrumb, Suchfeld, FAQ-Antwort, CTA und Feedback." />
+  <style>
+    :root{
+      --bg:#f6f7f8;
+      --card:#ffffff;
+      --text:#101114;
+      --muted:#5b616e;
+      --border:#e5e7eb;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --radius:16px;
+      --max:1200px;
+      --accent:#ff6a00; /* change to your brand */
+      --accent-2:#111827;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.5;
+    }
+    a{ color:inherit; text-decoration:none; }
+    .container{ max-width:var(--max); margin:0 auto; padding:18px; }
+
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:20;
+      background:rgba(246,247,248,.92);
+      backdrop-filter:saturate(1.2) blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .header-row{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800; letter-spacing:.2px;
+    }
+    .brand-badge{
+      width:34px; height:34px; border-radius:12px;
+      background:linear-gradient(135deg, var(--accent), #ff9a4a);
+      box-shadow:0 8px 16px rgba(255,106,0,.25);
+    }
+    .top-actions{ display:flex; gap:10px; align-items:center; }
+
+    .search{
+      display:flex; gap:10px; align-items:center;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 10px;
+      min-width: min(520px, 55vw);
+      box-shadow: 0 2px 0 rgba(0,0,0,.02);
+    }
+    .search input{
+      width:100%;
+      border:0; outline:none; background:transparent;
+      font:inherit; color:inherit;
+    }
+    .pill{
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      padding:8px 12px;
+      font-weight:650;
+      cursor:pointer;
+    }
+    .pill.primary{
+      background:var(--accent-2);
+      border-color:var(--accent-2);
+      color:#fff;
+    }
+    .pill:hover{ filter:brightness(.98); }
+
+    /* Layout */
+    .grid{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:18px;
+      margin-top:16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+      .search{ min-width: 0; width: 100%; }
+      .top-actions{ width:100%; justify-content:flex-end; }
+      .header-row{ flex-wrap:wrap; }
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .card-pad{ padding:16px; }
+    .muted{ color:var(--muted); font-size:14px; }
+
+    /* Sidebar */
+    .sidebar h2{
+      font-size:14px; text-transform:uppercase; letter-spacing:.08em;
+      margin:0 0 10px;
+      color:var(--muted);
+    }
+    .cat{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .cat + .cat{ margin-top:10px; }
+    .cat button{
+      width:100%;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:12px 12px;
+      border:0;
+      background:#fff;
+      cursor:pointer;
+      font:inherit;
+      font-weight:750;
+    }
+    .cat button:hover{ background:#fafafa; }
+    .cat .sub{
+      display:none;
+      border-top:1px solid var(--border);
+      padding:10px 8px 12px;
+      background:#fcfcfd;
+    }
+    .cat[aria-expanded="true"] .sub{ display:block; }
+    .sub a{
+      display:block;
+      padding:8px 10px;
+      border-radius:12px;
+      color:var(--text);
+    }
+    .sub a:hover{ background:#f2f3f5; }
+    .sub a.active{
+      background:rgba(255,106,0,.10);
+      border:1px solid rgba(255,106,0,.25);
+      font-weight:700;
+    }
+    .chev{
+      width:10px; height:10px;
+      border-right:2px solid #7a8192;
+      border-bottom:2px solid #7a8192;
+      transform: rotate(45deg);
+      transition: transform .15s ease;
+      margin-left:8px;
+    }
+    .cat[aria-expanded="true"] .chev{ transform: rotate(-135deg); }
+
+    /* Main */
+    .breadcrumb{
+      display:flex; flex-wrap:wrap; gap:8px;
+      align-items:center;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+    .breadcrumb a{ text-decoration:underline; text-decoration-color: rgba(91,97,110,.35); }
+    .breadcrumb .sep{ opacity:.7; }
+    .title{
+      margin:0 0 8px;
+      font-size: clamp(20px, 2.1vw, 30px);
+      letter-spacing:-.02em;
+    }
+    .answer p{ margin:0 0 10px; }
+    .answer ul{ margin:0; padding-left:18px; }
+    .callout{
+      margin-top:12px;
+      border:1px solid rgba(255,106,0,.25);
+      background:rgba(255,106,0,.08);
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .cta-row{
+      display:flex; flex-wrap:wrap; gap:10px;
+      margin-top:14px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .cta-left{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-weight:750;
+    }
+    .btn.primary{
+      background:var(--accent);
+      border-color:var(--accent);
+      color:#fff;
+    }
+    .btn.primary:hover{ filter:brightness(.97); }
+    .btn:hover{ background:#f6f6f6; }
+
+    .feedback{
+      margin-top:18px;
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      border-top:1px solid var(--border);
+      padding-top:14px;
+    }
+    .feedback .label{ font-weight:750; }
+    .vote{
+      display:inline-flex; gap:8px;
+      align-items:center;
+    }
+    .vote button{
+      border-radius:999px;
+      padding:8px 12px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .vote button:hover{ background:#f6f6f6; }
+    .vote button.selected{
+      border-color: rgba(16,185,129,.45);
+      background: rgba(16,185,129,.12);
+    }
+    .vote button.no.selected{
+      border-color: rgba(239,68,68,.45);
+      background: rgba(239,68,68,.10);
+    }
+    .feedback-note{ color:var(--muted); font-size:13px; }
+
+    /* Footer contact cards */
+    .contacts{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (max-width: 680px){ .contacts{ grid-template-columns:1fr; } }
+    .contact{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:#fcfcfd;
+    }
+    .contact .k{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+    .contact .v{ font-size:16px; font-weight:800; margin-top:4px; }
+    .contact .hint{ color:var(--muted); font-size:13px; margin-top:6px; }
+
+    /* Small helpers */
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header (search + primary CTA) -->
+  <header class="header">
+    <div class="container">
+      <div class="header-row">
+        <div class="brand" aria-label="Brand">
+          <div class="brand-badge" aria-hidden="true"></div>
+          <div>Service · FAQs</div>
+        </div>
+
+        <form class="search" role="search" onsubmit="return false;">
+          <span class="sr-only" id="searchLabel">FAQ durchsuchen</span>
+          <input aria-labelledby="searchLabel" id="searchInput" placeholder="Suchbegriff eingeben …" />
+          <button class="pill primary" id="searchBtn" type="button">Suche</button>
+        </form>
+
+        <div class="top-actions">
+          <a class="pill" href="#contact">Kontakt</a>
+          <a class="pill primary" href="#cta">Depot eröffnen</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <!-- Sidebar categories -->
+      <aside class="card sidebar card-pad" aria-label="Hilfekategorien">
+        <h2>Hilfekategorien</h2>
+
+        <section class="cat" aria-expanded="true">
+          <button type="button" class="cat-toggle">
+            Kontoeröffnung
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="sub">
+            <a href="#" class="active">Allgemein zur Kontoeröffnung</a>
+            <a href="#">Zugangsdaten bei Kontoeröffnung</a>
+          </div>
+        </section>
+
+        <section class="cat" aria-expanded="false">
+          <button type="button" class="cat-toggle">
+            TAN-Verfahren
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="sub">
+            <a href="#">App</a>
+            <a href="#">TAN-Card</a>
+          </div>
+        </section>
+
+        <section class="cat" aria-expanded="false">
+          <button type="button" class="cat-toggle">
+            Rund um Konto & Depot
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <div class="sub">
+            <a href="#">Allgemein</a>
+            <a href="#">Nachlass</a>
+          </div>
+        </section>
+
+        <p class="muted" style="margin-top:12px;">
+          Tipp: Markiere die aktive Kategorie/FAQ im Menü und nutze die Suche oben.
+        </p>
+      </aside>
+
+      <!-- Main FAQ detail -->
+      <section class="card card-pad" aria-label="FAQ Detail">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="#">FAQs</a><span class="sep">/</span>
+          <a href="#">Kontoeröffnung</a><span class="sep">/</span>
+          <a href="#">Allgemein zur Kontoeröffnung</a><span class="sep">/</span>
+          <span aria-current="page">Gemeinschaftsdepot</span>
+        </nav>
+
+        <h1 class="title">Kann ich ein Gemeinschaftsdepot eröffnen?</h1>
+
+        <div class="answer muted" style="margin-top:10px;">
+          <p>
+            Ja – ein Gemeinschaftsdepot kann online eröffnet werden. Es sind maximal zwei Depotinhabende möglich.
+            Nach der Depoteröffnung erfolgt die Legitimation; diese ist für beide erforderlich.
+          </p>
+
+          <div class="callout">
+            <strong>Wichtig:</strong>
+            <ul>
+              <li>Der CFD-Handel über ein Gemeinschaftsdepot ist nicht möglich.</li>
+              <li>Bei nicht verheirateten Inhabenden kann kein Freistellungsauftrag gestellt werden.</li>
+              <li>Voraussetzung sind identische Steuerverhältnisse (z. B. nicht Inland + Ausland gemischt).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cta-row" id="cta">
+          <div class="cta-left">
+            <a class="btn primary" href="#" role="button" aria-label="Depot eröffnen">Depot eröffnen</a>
+            <a class="btn" href="#" role="button" aria-label="Zurück zur Kategorie">Zurück zur Kategorie</a>
+          </div>
+          <div class="muted">Stand: <span id="today"></span></div>
+        </div>
+
+        <div class="feedback" aria-label="Feedback">
+          <div class="label">Hat Ihnen dieser Eintrag weitergeholfen?</div>
+          <div class="vote" role="group" aria-label="Feedback Buttons">
+            <button id="voteYes" type="button">Ja</button>
+            <button id="voteNo" type="button" class="no">Nein</button>
+          </div>
+          <div class="feedback-note" id="feedbackNote"></div>
+        </div>
+
+        <section id="contact" style="margin-top:18px;">
+          <div class="contacts">
+            <div class="contact">
+              <div class="k">Kundenservice</div>
+              <div class="v">+49 0000 000000</div>
+              <div class="hint">Mo–Fr · 09:00–17:00</div>
+            </div>
+            <div class="contact">
+              <div class="k">Interessenten</div>
+              <div class="v">+49 0000 000001</div>
+              <div class="hint">Fragen zur Depoteröffnung</div>
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Accordion for categories
+    document.querySelectorAll(".cat").forEach(cat => {
+      const btn = cat.querySelector(".cat-toggle");
+      btn.addEventListener("click", () => {
+        const expanded = cat.getAttribute("aria-expanded") === "true";
+        cat.setAttribute("aria-expanded", String(!expanded));
+      });
+    });
+
+    // "Search" demo behavior
+    const searchInput = document.getElementById("searchInput");
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      const q = (searchInput.value || "").trim();
+      if (!q) return alert("Bitte Suchbegriff eingeben.");
+      alert(`Suche nach: "${q}" (Demo)`);
+    });
+
+    // Feedback voting (client-side demo)
+    const yes = document.getElementById("voteYes");
+    const no = document.getElementById("voteNo");
+    const note = document.getElementById("feedbackNote");
+
+    function selectVote(isYes){
+      yes.classList.toggle("selected", isYes);
+      no.classList.toggle("selected", !isYes);
+      note.textContent = isYes
+        ? "Danke! Ihr Feedback wurde gespeichert (Demo)."
+        : "Danke! Wir verbessern den Artikel basierend auf Feedback (Demo).";
+    }
+    yes.addEventListener("click", () => selectVote(true));
+    no.addEventListener("click", () => selectVote(false));
+
+    // Date
+    const d = new Date();
+    document.getElementById("today").textContent =
+      d.toLocaleDateString("de-DE", { year:"numeric", month:"2-digit", day:"2-digit" });
+  </script>
+</body>
+</html>
